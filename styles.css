@@ -1,0 +1,97 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background-color: #2c2f33;
+    color: #fff;
+    dispaly:flex;
+    justify-content:center;
+    align-items:center;
+    min-height: 100vh;
+    flex-wrap:wrap;
+    padding: 20px;
+}
+.search-container {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#searchInput {
+    width: 80%;
+    max-width: 400px;
+    padding: 10px;
+    border-radius: 20px;
+    border: none;
+    font-size: 16px;
+    background-color: #1e3a8a;
+    color: #fff;
+}
+
+#searchInput::placeholder {
+    color: #bbb;
+}
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.mentor-card {
+    background-color: #2682b4;
+    border-radius: 10px;
+    width: 250px;
+    text-align: center;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.mentor-card img {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 15px;
+}
+
+.mentor-card h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+
+.mentor-card p {
+    font-size: 14px;
+    color: #ccc;
+    margin-bottom: 15px;
+}
+
+.mentor-card button {
+    background-color: #fff;
+    color: #1e3a8a;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.mentor-card button:hover {
+    background-color: #ddd;
+}
+
+.logo-container img{
+ width:0,5px
+ height:0,5px;
+ text-align:left;
+ }
+.logo-text{
+  color:white;
+  front-size:24px;
+  front-weigth:bold;
+  front-family:Arial,sans-serif;
+  }
