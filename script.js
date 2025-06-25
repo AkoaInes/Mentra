@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
             title.textContent = mentor.title;
 
             const button = document.createElement('button');
-            button.textContent = 'View more';
+            button.textContent = 'View more'
 
             card.appendChild(img);
             card.appendChild(name);
