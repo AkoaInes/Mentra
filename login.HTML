@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" type="text/css" href="style.css">
+  <title>Login Page</title>
+</head>
+<body>
+  <img src="IMG-20250524-WA0032.jpg" alt="Logo" class="corner-image">
+
+  <div class="container">
+    <h1>Login</h1>
+    <form id="loginForm">
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password:</label>
+      <div class="password-container">
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <button type="submit" class="login-button">Log In</button>
+    </form>
+
+    <div id="login-message"></div>
+
+    <p>Don't have an account? <a href="/signup.html">Register here</a></p>
+  </div>
+
+  <script>
+    const form = document.getElementById('loginForm');
+    const message = document.getElementById('login-message');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData(form);
+      const data = new URLSearchParams(formData);
+
+      const response = await fetch('/login', {
+        method: 'POST',
+        body: data
+      });
+
+      const result = await response.text();
+      message.textContent = result;
+      message.style.color = result.includes('Incorrect') ? 'red' : 'green';
+    });
+  </script>
+</body>
+</html>

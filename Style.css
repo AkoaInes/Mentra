@@ -1,0 +1,131 @@
+/* Reset de base */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  height: 100vh;
+  background: linear-gradient(to right, #1e1e1e, #252526); /* Fond sombre */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.container {
+  background-color: #3b3b3b; /* Fenêtre adoucie */
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 350px;
+  color: #f5f5f5;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #dddddd;
+}
+
+input[type="email"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  padding-right: 60px;
+  margin-bottom: 15px;
+  border: 1px solid #444;
+  border-radius: 6px;
+  background-color: #1e1e1e;
+  color: #f0f0f0;
+}
+
+/* Bloc mot de passe + bouton Show */
+.password-container {
+  position: relative;
+}
+
+.password-container input {
+  width: 100%;
+}
+
+#togglePassword {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 5px 10px;
+  border: none;
+  background: #667eea;
+  color: white;
+  font-size: 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+#togglePassword:hover {
+  background-color: #5a67d8;
+}
+
+.login-button {
+  margin-top: 10px;
+}
+
+p {
+  text-align: center;
+  margin-top: 15px;
+  color: #cccccc;
+}
+
+a {
+  color: #819aff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 14px;
+  background-color: #667eea;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button[type="submit"]:hover {
+  background-color: #5a67d8;
+}
+body {
+  background-color: black; /* Fond noir */
+  margin: 0;
+  padding: 0;
+}
+
+.corner-image {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 80px;      /* Taille de l'image */
+  height: 80px;     /* Hauteur égale pour rendre le cercle parfait */
+  border-radius: 50%; /* Rend l'image circulaire */
+  object-fit: cover;  /* Coupe l’image proprement si elle dépasse */
+  z-index: 10;
+}
+
