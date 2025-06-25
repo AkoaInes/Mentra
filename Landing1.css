@@ -1,0 +1,71 @@
+/* General Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #06011f;
+  line-height: 1.6;
+  background-color: #060a33;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header with Background Image */
+header {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(3, 3, 39, 0.534)), 
+              url('./assets/laptop e-Learning interface.jpeg') center/cover no-repeat;
+  color: white;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, white);
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-title img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #d1d1d1;
+}
