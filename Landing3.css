@@ -1,0 +1,329 @@
+/* General Styles */
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  color: #06011f;
+  line-height: 1.6;
+  background-color: #060a33;
+}
+
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header with Background Image */
+header {
+  background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(3, 3, 39, 0.534)), 
+              url('./assets/laptop e-Learning interface.jpeg') center/cover no-repeat;
+  color: white;
+  padding: 1rem 0;
+  position: relative;
+}
+
+.header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 150px;
+  background: linear-gradient(to bottom, transparent, white);
+}
+
+.header-flex {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 2;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.logo-title img {
+    width: 45px;
+    height: 45px;
+    object-fit: contain;
+    border-radius: 8px;
+}
+
+nav {
+  display: flex;
+  gap: 2rem;
+}
+
+nav a {
+  text-decoration: none;
+  color: rgb(255, 255, 255);
+  font-weight: 600;
+  transition: color 0.3s;
+}
+
+nav a:hover {
+  color: #d1d1d1;
+}
+
+/* Top Section - Empowering Growth */
+.top {
+  background: transparent;
+  color: white;
+  text-align: center;
+  padding: 4rem 2rem 6rem;
+  position: relative;
+  z-index: 1;
+}
+
+.top h2 {
+  font-size: 2.5rem;
+  margin-bottom: 1rem;
+  font-weight: 800;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+}
+
+.top p {
+  font-size: 1.2rem;
+  max-width: 600px;
+  margin: 0 auto 2rem;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+/* Divider Section */
+.divider {
+  display: flex;
+  gap: 2rem;
+  margin: 3rem auto 3rem;
+  position: relative;
+  z-index: 3;
+  padding: 0 2rem;
+}
+
+.left {
+  flex: 1;
+}
+
+.right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  color: white;
+}
+
+/* Right Column Layout */
+.right {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Booking Block Styles */
+.booking-block {
+    background-color: rgba(6, 7, 85, 0.616);
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    border-top: 5px solid #6a4aff;
+}
+
+.booking-block h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: #f1eeee;
+}
+
+.book-btn {
+    background-color: #6a4aff;
+    color: white;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.9rem;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    font-weight: 600;
+    margin-top: 1rem;
+}
+
+.book-btn:hover {
+    background-color: #5a3aef;
+}
+
+/* Adjust existing blocks for consistency */
+.left-block, .right-block, .booking-block {
+    flex: 1;
+    min-height: 180px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .left-block, .right-block, .booking-block {
+        min-height: auto;
+        padding: 1.2rem;
+    }
+    
+    .book-btn {
+        padding: 0.5rem 1.2rem;
+    }
+}
+
+/* Slider Frame */
+.slider-frame {
+  position: relative;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  height: 800px;
+}
+
+.slider-images {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.slide.active {
+  opacity: 1;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.slider-dots {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+}
+
+.slider-dots .dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+}
+
+.slider-dots .dot.active {
+  background: blue;
+}
+/* Mentor/Mentee Frames */
+.left-block, .right-block {
+  background-color:  rgba(6, 7, 85, 0.616);
+  border-radius: 10px;
+  padding: 2rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  height: 100%;
+}
+
+.left-block {
+  border-top: 5px solid #4a6bff;
+}
+
+.right-block {
+  border-top: 5px solid #ff6b4a;
+}
+
+.left-block h3, .right-block h3 {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+/* Bottom Section */
+.bottom {
+  background-color: rgb(3, 3, 46);
+  padding: 3rem 0;
+  margin-top: 2rem;
+  color: white;
+}
+
+.section {
+  text-align: center;
+}
+
+.section h3 {
+  font-size: 2rem;
+  margin-bottom: 1rem;
+}
+
+.section p {
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+/* Buttons */
+.join-btn {
+  background-color: #4a6bff;
+  color: white;
+  border: none;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  font-weight: 600;
+}
+
+.join-btn:hover {
+  background-color: #3a5bef;
+}
+
+/* Footer */
+footer {
+  background-color: #062242;
+  color: white;
+  text-align: center;
+  padding: 1.5rem 0;
+  margin-top: 3rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .divider {
+    flex-direction: column;
+    margin-top: -5rem;
+  }
+  
+  .header-flex {
+    flex-direction: column;
+    gap: 1rem;
+  }
+  
+  nav {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  .top h2 {
+    font-size: 2rem;
+  }
+  
+  .slider-frame {
+    height: 300px;
+  }
+}
