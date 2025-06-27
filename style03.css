@@ -1,0 +1,194 @@
+:root {
+  --primary-color: #3d0dac;
+  --secondary-color: #2452af;
+  --text-color: #333;
+  --light-color: #f8f9fa;
+  --dark-color: #2b3d70;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--secondary-color);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+  color: var(--text-color);
+}
+
+.profile-card {
+  background-color: white;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  width: 90%;
+  max-width: 500px;
+  text-align: center;
+  padding: 40px 30px;
+  transition: all 0.3s ease;
+}
+
+.profile-picture-container {
+  position: relative;
+  display: inline-block;
+  margin-bottom: 20px;
+}
+
+.profile-picture-container img {
+  width: 200px;
+  height: 200px;
+  border-radius: 50%; /* This makes the image circular */
+  object-fit: cover;
+  border: 5px solid var(--primary-color);
+  box-shadow: 0 5px 15px rgba(117, 21, 21, 0.1);
+  transition: all 0.3s ease;
+}
+
+.upload-btn-container {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+}
+
+.upload-btn-container input[type="file"] {
+  display: none;
+}
+
+.upload-btn {
+  background-color: var(--primary-color);
+  color: white;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 1.2em; /* Make the plus icon slightly larger */
+}
+
+.upload-btn:hover {
+  transform: scale(1.1);
+  background-color: #2a0780;
+}
+
+.profile-card h2 {
+  margin: 10px 0 5px;
+  color: var(--text-color);
+  font-size: 1.8rem;
+}
+
+.profile-title {
+  color: var(--primary-color);
+  margin: 0 0 30px;
+  font-weight: 200;
+}
+
+.profile-info {
+  text-align: left;
+  margin-bottom: 30px;
+}
+
+.info-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.label {
+  font-weight: bold;
+  color: var(--dark-color);
+  width: 120px;
+  flex-shrink: 0;
+}
+
+input {
+  flex-grow: 1;
+  padding: 10px 15px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: all 0.3s ease;
+}
+
+input:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(61, 13, 172, 0.1);
+}
+
+/* Keeping input[readonly] for potential future use or if you make inputs readonly after save */
+input[readonly] {
+  background-color: #f8f9fa;
+  border-color: #eee;
+  cursor: not-allowed;
+}
+
+.action-buttons {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+button {
+  padding: 12px 25px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+/* Removed .edit-btn styles as the button is gone */
+
+.save-btn {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.save-btn:hover {
+  background-color: #1c3a8a;
+  transform: translateY(-2px);
+}
+
+/* The disabled state might not be used now, but good to keep if you add logic for it later */
+.save-btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+  transform: none;
+}
+
+@media (max-width: 600px) {
+  .profile-card {
+    padding: 30px 20px;
+  }
+  
+  .profile-picture-container img {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .info-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .label {
+    margin-bottom: 5px;
+    width: 100%;
+  }
+  
+  input {
+    width: 100%;
+  }
+  
+  .action-buttons {
+    flex-direction: column;
+  }
+  
+  button {
+    width: 100%;
+  }
+}
