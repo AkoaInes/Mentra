@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TCHINDA CHARLES - Profile</title>
+  <link rel="stylesheet" href="style03.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+  <div class="profile-card">
+    <div class="profile-picture-container">
+      <img id="profileImage" src="profile picture.jpeg" alt="Profile Picture">
+      <div class="upload-btn-container">
+        <input type="file" id="fileInput" accept="image/*">
+        <label for="fileInput" class="upload-btn">
+          <i class="fas fa-plus"></i> </label>
+      </div>
+    </div>
+    
+    
+    <div class="profile-info">
+      <div class="info-row">
+        <span class="label">Name:</span>
+        <input type="text" id="name" placeholder="Enter your name" value="TCHINDA">
+      </div>
+      <div class="info-row">
+        <span class="label">Surname:</span>
+        <input type="text" id="surname" placeholder="Enter your surname" value="CHARLES">
+      </div>
+      <div class="info-row">
+        <span class="label">Email:</span>
+        <input type="email" id="email" placeholder="Enter your email">
+      </div>
+      <div class="info-row">
+        <span class="label">Phone:</span>
+        <input type="tel" id="phone" placeholder="Enter your phone number">
+      </div>
+      <div class="info-row">
+        <span class="label">Course Title:</span>
+        <input type="text" id="course" placeholder="Enter your course">
+      </div>
+    </div>
+    
+    <div class="action-buttons">
+      <button class="save-btn">Save Changes</button> </div>
+  </div>
+
+  <script>
+    // Profile picture upload functionality
+    const fileInput = document.getElementById('fileInput');
+    const profileImage = document.getElementById('profileImage');
+    
+    fileInput.addEventListener('change', function(e) {
+      if (e.target.files && e.target.files[0]) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+          profileImage.src = event.target.result;
+        };
+        reader.readAsDataURL(e.target.files[0]);
+      }
+    });
+
+    // Save profile functionality
+    const saveBtn = document.querySelector('.save-btn');
+    const inputs = document.querySelectorAll('input');
+    
+    // All inputs are editable by default, so no need for editBtn logic
+    saveBtn.addEventListener('click', function() {
+      // In a real application, you would send this data to your backend/database
+      // For now, we'll just show an alert.
+      alert('Profile saved successfully!');
+      // You might want to make inputs readonly after saving, or keep them editable
+      // For this modification, we'll keep them editable as there's no edit button
+      // to toggle them back. If you want them to become readonly after saving,
+      // uncomment the line below:
+      // inputs.forEach(input => input.setAttribute('readonly', true));
+      // And also, if you make them readonly, the save button should probably be
+      // re-enabled only when an input changes. This requires more complex JS.
+    });
+  </script>
+</body>
+</html>
