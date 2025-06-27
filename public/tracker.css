@@ -1,0 +1,302 @@
+/* === GLOBAL RESET === */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  height: 100vh;
+  background-color: #0c062bf3;
+  font-family: sans-serif;
+}
+
+/* === TOP BAR === */
+.top-bar {
+  height: 40px;
+  background-color: #0c062bf9;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 10px;
+  color: white;
+}
+
+/* App name */
+.app-name {
+  font-weight: bold;
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.homeBtn {
+  height: 25px;
+  padding: 5px;
+  border-radius: 6px;
+  background-color: #290583;
+  border-top: none;
+  border-left: none;
+  color: whitesmoke;
+}
+
+.homeBtn:hover {
+  background-color: rgb(22, 7, 65);
+}
+
+.page-name {
+  font-size: 15px;
+  letter-spacing: 1px;
+  font-style: italic;
+}
+
+/* Help icon */
+.top-right {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-end;
+  gap: 10px;
+}
+
+.help-icon {
+  cursor: pointer;
+  font-size: 18px;
+  padding: 4px;
+  font-size: 15px;
+  border-radius: 5px;
+}
+
+.help-icon:hover {
+  background-color: #1b0948;
+}
+
+/* === MAIN CONTAINER (Frames) === */
+.container {
+  display: flex;
+  height: calc(100vh - 40px); /* full height minus top bar */
+}
+
+/* Sidebar */
+.sidebar {
+  width: 60px;
+  background-color: #0c062bec;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* This stays */
+  align-items: center;
+  padding: 10px 0;
+}
+
+
+.bottom-icons {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.icon-btn {
+  background-color: rgb(255, 255, 255, 0.05);
+  border: none;
+  color: #b9bbbe;
+  font-size: 20px;
+  cursor: pointer;
+  padding: 9px;
+  margin-bottom: -10px;
+  border-radius: 6px;
+  transition: background-color 0.2s, color 0.2s;
+}
+
+.icon-btn:hover {
+  background-color: rgb(247, 246, 250);
+  color: rgb(14, 5, 51);
+}
+/* Mentra logo at top of sidebar */
+.app-logo {
+  margin-bottom: 25px;
+  border-bottom: 4px solid rgba(19, 13, 73, 0.919);
+}
+
+.app-logo img {
+  width: 41px;
+  height: 41px;
+  object-fit: contain;
+  border-radius: 8px;
+  
+}
+
+/* === FRAME 2: LEFT PANEL === */
+.left-panel {
+  width: 400px;
+  background-color: #1b0948;
+  border-top-right-radius: 10px;
+  padding: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* Title for "My Mentors" */
+.left-panel .section-title {
+  display: flex;
+  font-size: 14px;
+  font-weight: bold;
+  color: white;
+}
+
+/* mentors search bar */
+.mentor-search {
+  margin-bottom: 10px;
+}
+
+.mentor-search input {
+  width: 100%;
+  padding: 6px 10px;
+  border-radius: 6px;
+  background-color: #07013ac5;
+  border: none;
+  color: white;
+  font-size: 13px;
+}
+
+/* Mentor list container */
+.mentor-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px; /* Space after search */
+}
+
+.mentor-item.selected {
+  background-color: #3b1f6e;
+  border-left: 4px solid #40f540;
+}
+
+/* Each mentor item */
+.mentor-item {
+  display: flex;
+  align-items: center;
+  padding: 8px;
+  border-radius: 6px;
+  background-color: rgb(13, 2, 57);
+  transition: background-color 0.2s;
+  cursor: pointer;
+}
+
+.mentor-item:hover {
+  background-color: #0f033fc2;
+}
+
+/* Circular avatar placeholder */
+.mentor-avatar {
+  width: 30px;
+  height: 30px;
+  background-color: #eceaf5c7;
+  border-radius: 50%;
+  margin-right: 10px;
+}
+
+/* Mentor name style */
+.mentor-name {
+  color: #e1dfece3;
+  font-size: 13px;
+}
+
+.mentor-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+  transition: background 0.2s ease;
+}
+
+.mentor-item:hover {
+  background-color: #120157;
+}
+
+.mentor-item.selected {
+  background-color: #02184d;
+}
+
+.user-avatar {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid #ccc;
+}
+
+.user-name {
+  font-weight: 600;
+  color: #f7f4f4;
+  font-size: 1rem;
+}
+
+/*  CENTER PANEL  */
+.center-panel {
+  height: 100%;
+  width: 100%;
+  background-color: #0c062bca;
+  display: flex;
+  flex-direction: column;
+}
+
+.fiter-options {
+  height: 60px;
+  width: 100%;
+  border-bottom-right-radius: 10px;
+  background-color: #0c062bca;
+  display: flex;
+  padding: 0 5px;
+  color: white;
+  padding-top: 30px;
+  padding-left: 18px;
+  gap: 15px;
+}
+
+.filter {
+  height: 25px;
+  padding: 5px;
+  border-top-right-radius: 6px;
+  background-color: #290583;
+  border-top: none;
+  border-left: none;
+  color: whitesmoke;
+}
+
+.filter:hover {
+background-color: #0c032487;
+}
+
+.chart {
+  height: 950%;
+  width: 90%;
+  padding-left: 40px;
+  margin-left: 5px;
+  background-color: #13014271;
+  display: flex;
+  flex-direction: row;
+
+}
+
+canvas#timeChart {
+  width: 100%;
+  height: 100%;
+}
+
+.updates{
+  width: 100%;
+  height: 580px;
+  align-self: center;
+  margin-left: 10px;
+  margin-right: 5px;
+  background: #1b0948;
+}
+
+#jitsi-container {
+  flex: 1;
+  width: 100%;
+  height: 100%;
+}
+

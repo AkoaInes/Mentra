@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentra - Peer Mentorship App</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+  <link rel="stylesheet" href="main.css">
+  <script src='https://meet.jit.si/external_api.js' defer></script>
+
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <div class="top-bar">
+    <div class="app-name">MENTRA</div>
+
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search mentors by course...">
+    </div>
+
+    <div class="top-right">
+      <button class="mail-btn" title="Mailbox">
+  <i class="fas fa-envelope"></i>
+</button>
+<div id="mailOverlay" class="mail-overlay">
+  <div class="mail-content">
+    <h3>Mailbox</h3>
+    <div id="mailList"></div>
+    <button onclick="closeMailbox()" class="close-btn">Close</button>
+  </div>
+</div>
+      <div class="help-icon" title="Help">❓</div>
+    </div>
+  </div>
+
+  <!-- Main frame container -->
+  <div class="container">
+    <!-- Frame 1: Discord-style Sidebar -->
+  <div class="sidebar">
+  <div class="sidebar-top-group">
+  <div class="app-logo">
+    <img src="mentra.jpg" alt="Mentra Logo" />
+  </div>
+
+  <div class="top-icons">
+    <button class="icon-btn" title="Groups"><i class="fas fa-users"></i></button>
+    <button class="icon-btn" title="Tracker" id="trackerBtn"><i class="fas fa-chart-line"></i></button>
+    <button class="icon-btn" title="Search"><i class="fas fa-search"></i></button>
+  </div>
+</div>
+
+  <div class="bottom-icons">
+    <button class="icon-btn" title="Settings"><i class="fas fa-cog"></i></button>
+    <button class="icon-btn" title="Account" id="accountBtn"><i class="fas fa-user-circle"></i></button>
+  </div>
+</div>
+
+
+    <!-- Frame 2: My Mentors panel -->
+    <div class="left-panel">
+      <div class="section-title">My Mentees</div>
+
+  <!-- Search bar for discussions (like WhatsApp style) -->
+  <div class="discussion-search">
+    <input type="text" placeholder="Search past discussions...">
+  </div>
+
+  <!-- Static list of mentors for now -->
+  <!-- Static list of mentors for now -->
+<!-- Previously static mentor-list section -->
+<div class="mentor-list" id="mentorList"></div>
+
+
+    </div>
+
+    <div class="center-panel">
+      <div class="start-session-wrapper">
+        <div id="jitsi-container" style="width: 100%; height: 100%; display: none;"></div>
+        <button class="start-session-button">
+          <img src="Session start.jpg" alt="Start Mascot" class="session-img" />
+          <span>Start Session</span>
+        </button>
+      </div>
+    </div><!-- Frame 3 -->
+
+    <!-- Frame 4: Session, Notes, Assignment -->
+    <div class="right-panel">
+      <button onclick="endSession()" class="end-session-button">End Session</button>
+      <!-- Sub-frame 1: Session History -->
+      <div class="subframe session-history">
+      </div>
+
+      <!-- Sub-frame 2: Notes Upload -->
+<div class="subframe notes-upload">
+  <div class="section-title">Notes</div>
+  <form id="notesForm">
+    <label class="upload-btn">
+      Upload Notes
+      <input type="file" name="notes" hidden>
+    </label>
+    <input type="hidden" name="session_id" id="notesSessionId">
+  </form>
+  <div id="notesList" class="file-list"></div>
+</div>
+
+<!-- Sub-frame 3: Assignment Upload -->
+<div class="subframe assignment-upload">
+  <div class="section-title">Assignment</div>
+  <form id="assignmentForm">
+    <label class="upload-btn">
+      Upload Assignment
+      <input type="file" name="assignment" hidden>
+    </label>
+    <input type="hidden" name="session_id" id="assignmentSessionId">
+  </form>
+  <div id="assignmentList" class="file-list"></div>
+</div>
+    </div>
+  </div>
+
+
+  <script>
+let selectedMenteeId = null;
+let sessionId = null;
+let api = null;
+let linkedUsers = [];
+let startTime = null;
+const mentorId = localStorage.getItem("user_id"); // from login
+
+// Load mentees into left panel
+
+async function loadMentees() {
+  try {
+    const mentorId = localStorage.getItem("user_id");
+    if (!mentorId) {
+      console.error("No mentor ID found");
+      return;
+    }
+
+    const res = await fetch(`/api/my-mentees?mentor_id=${mentorId}`);
+    
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    const mentees = await res.json();
+    const list = document.getElementById("mentorList");
+    
+    if (!list) {
+      console.error("Mentor list container not found");
+      return;
+    }
+
+    list.innerHTML = "";
+
+    if (!mentees || mentees.length === 0) {
+      list.innerHTML = "<p class='no-mentees'>No mentees yet.</p>";
+      return;
+    }
+
+    mentees.forEach(mentee => {
+      const item = document.createElement("div");
+      item.className = "mentor-item"; // Changed from chat-item to match CSS
+      item.dataset.menteeId = mentee.id;
+
+      const img = document.createElement("img");
+      img.className = "user-avatar";
+      img.src = mentee.profile_img 
+        ? `/images/${mentee.profile_img}` 
+        : "/images/default_profile.jpg";
+      img.alt = `${mentee.name}'s profile picture`;
+      img.onerror = () => { img.src = "/images/default_profile.jpg" };
+
+      const info = document.createElement("div");
+      info.className = "mentor-info";
+      info.innerHTML = `
+        <div class="mentor-name">${mentee.name}</div>
+        <div class="mentor-course">${mentee.course || 'No course specified'}</div>
+      `;
+
+      item.append(img, info);
+      
+      item.addEventListener("click", () => {
+        selectedMenteeId = mentee.id;
+        highlightSelectedMentee(item);
+        loadSessionHistory(mentee.id);
+      });
+
+      list.appendChild(item);
+    });
+
+  } catch (err) {
+    console.error("Failed to load mentees:", err);
+    const list = document.getElementById("mentorList");
+    if (list) {
+      list.innerHTML = `<p class="error-message">Error loading mentees. Please try again.</p>`;
+    }
+  }
+}
+
+function highlightSelectedMentee(el) {
+  // Remove selected class from all items
+  document.querySelectorAll('.mentor-item').forEach(item => {
+    item.classList.remove('selected');
+  });
+  
+  // Add to clicked item if it exists
+  if (el) {
+    el.classList.add('selected');
+  }
+}
+
+document.querySelector(".start-session-button").addEventListener("click", async () => {
+  if (!selectedMenteeId) {
+    alert("Select a mentee first.");
+    return;
+  }
+
+  const roomName = mentra-session-`${mentorId}-${selectedMenteeId}`;
+  const container = document.getElementById("jitsi-container");
+  container.style.display = "block";
+  document.querySelector(".start-session-button").style.display = "none";
+
+  const domain = "meet.jit.si";
+  const options = {
+    roomName: roomName,
+    width: "100%",
+    height: "100%",
+    parentNode: container
+  };
+  api = new JitsiMeetExternalAPI(domain, options);
+
+  startTime = new Date();
+  const res = await fetch('/api/sessions/start', {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      mentor_id: mentorId,
+      mentee_id: selectedMenteeId,
+      start_time: startTime.toISOString()
+    })
+  });
+
+  const data = await res.json();
+  sessionId = data.session_id;
+
+document.getElementById("notesSessionId").value = sessionId;
+document.getElementById("assignmentSessionId").value = sessionId;
+loadUploadedFiles(sessionId); // Load uploaded files if any
+});
+
+async function endSession() {
+  if (!sessionId) return;
+  const endTime = new Date();
+  const duration = Math.round((endTime - new Date(startTime)) / 60000);
+
+  await fetch('/api/sessions/end', {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId,
+      end_time: endTime.toISOString(),
+      duration
+    })
+  });
+
+  if (api) api.dispose();
+  alert("Session ended and saved.");
+}
+
+window.addEventListener('DOMContentLoaded', loadMentees);
+</script>
+
+<script>
+async function loadSessionHistory(menteeId) {
+  const res = await fetch(`/api/sessions/${menteeId}`);
+  const sessions = await res.json();
+
+  const container = document.querySelector('.session-history');
+  container.innerHTML = `<div class="section-title">Session History</div>`;
+
+  if (sessions.length === 0) {
+    container.innerHTML += "<div class='session-item'>No sessions yet.</div>";
+    return;
+  }
+
+  sessions.forEach(session => {
+    const date = new Date(session.date).toLocaleDateString();
+    const topic = session.topic || "Untitled";
+    container.innerHTML += `<div class="session-item">${date} - ${topic} (${session.duration} mins)</div>`;
+  });
+}
+</script>
+
+<script>
+  document.getElementById('accountBtn').addEventListener('click', () => {
+    window.location.href = '/account.html';
+  });
+
+  document.getElementById('trackerBtn').addEventListener('click', () => {
+    window.location.href = '/tracker.html';
+  });
+</script>
+
+<script>
+const userId = localStorage.getItem("user_id");
+const userStatus = localStorage.getItem("status");
+
+document.querySelector(".mail-btn").addEventListener("click", () => {
+  document.getElementById("mailOverlay").classList.add("active");
+  loadMailbox();
+});
+
+function closeMailbox() {
+  document.getElementById("mailOverlay").classList.remove("active");
+}
+
+async function loadMailbox() {
+  const endpoint = userStatus === 'mentor'
+    ? `/api/requests/inbox?mentor_id=${userId}`
+    : `/api/requests/outbox?mentee_id=${userId}`;
+
+  try {
+    const res = await fetch(endpoint);
+    if (!res.ok) throw new Error("Failed to fetch");
+
+    const requests = await res.json();
+    const container = document.getElementById("mailList");
+
+    container.innerHTML = "";
+    if (requests.length === 0) {
+      container.innerHTML = "<p>No messages.</p>";
+      return;
+    }
+
+    requests.forEach(req => {
+      if (userStatus === 'mentor') {
+        container.innerHTML += `
+          <div class="mail-item">
+            <p>Request from ${req.mentee_name} ${req.mentee_surname}</p>
+            <small>${new Date(req.requested_at).toLocaleString()}</small>
+            <div style="margin-top: 8px;">
+              <button onclick="respondToRequest(${req.request_id}, 'accept')" style="margin-right: 5px;">Accept</button>
+              <button onclick="respondToRequest(${req.request_id}, 'reject')">Reject</button>
+            </div>
+          </div>
+        `;
+      } else {
+        container.innerHTML += `
+          <div class="mail-item">
+            To ${req.mentor_name} ${req.mentor_surname}: ${req.status.toUpperCase()}
+            <br><small>${new Date(req.requested_at).toLocaleString()}</small>
+          </div>
+        `;
+      }
+    });
+  } catch (err) {
+    console.error("Mailbox load error:", err);
+    document.getElementById("mailList").innerHTML = "<p>Failed to load mailbox.</p>";
+  }
+}
+
+async function respondToRequest(requestId, action) {
+  try {
+    const res = await fetch('/api/respond-request', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ request_id: requestId, action })
+    });
+
+    const data = await res.json();
+    alert(data.message);
+
+    loadMailbox();     // Refresh mailbox
+    if (action === 'accept') {
+      loadMentees();   // Refresh mentee list on the sidebar
+    }
+
+  } catch (err) {
+    alert('Failed to respond. Please try again.');
+  }
+}
+
+function uploadFile(formId, fieldName, listId) {
+  const form = document.getElementById(formId);
+  const formData = new FormData(form);
+
+  fetch('/api/sessions/upload', {
+    method: 'POST',
+    body: formData
+  })
+  .then(res => res.json())
+  .then(data => {
+    alert(data.message);
+    loadUploadedFiles(sessionId); // Refresh list
+  })
+  .catch(err => alert('Upload failed'));
+}
+
+document.querySelector('input[name="notes"]').addEventListener('change', () => {
+  uploadFile('notesForm', 'notes', 'notesList');
+});
+
+document.querySelector('input[name="assignment"]').addEventListener('change', () => {
+  uploadFile('assignmentForm', 'assignment', 'assignmentList');
+});
+
+function loadUploadedFiles(sessionId) {
+  fetch(`/api/sessions/${sessionId}/files`)
+    .then(res => res.json())
+    .then(data => {
+      const notesList = document.getElementById('notesList');
+      const assignmentList = document.getElementById('assignmentList');
+      notesList.innerHTML = '';
+      assignmentList.innerHTML = '';
+
+      if (data.notes_path) {
+        notesList.innerHTML = <div class="file-item"><a href="/uploads/${data.notes_path}" download>📥 Download Notes</a></div>;
+      }
+
+      if (data.assignments_path) {
+        assignmentList.innerHTML = <div class="file-item"><a href="/uploads/${data.assignments_path}" download>📥 Download Assignment</a></div>;
+      }
+    });
+}
+</script>
+
+</body>
+</html>

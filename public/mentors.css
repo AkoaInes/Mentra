@@ -1,0 +1,74 @@
+body {
+  font-family: Arial, sans-serif;
+  background-color: #0c062bf3;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 20px;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: whitesmoke;
+}
+
+.mentors-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: space-between;
+}
+
+.mentor-card {
+  background-color: rgb(22, 7, 65);
+  color: whitesmoke;
+  border-radius: 10px;
+  box-shadow: 0 0 8px rgba(0,0,0,0.1);
+  width: calc(20% - 10px); /* 5 per row with spacing */
+  padding: 15px;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.mentor-image {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
+  margin: auto;
+  display: block;
+  margin-bottom: 10px;
+  border: 3px solid #4603ca;
+}
+
+.mentor-name {
+  font-weight: bold;
+  font-size: 18px;
+  margin: 10px 0 5px;
+}
+
+.mentor-course,
+.mentor-level {
+  font-size: 14px;
+  color: white;
+  margin: 4px 0;
+}
+
+.request-btn {
+  margin-top: 10px;
+  background-color: #020e8e;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.request-btn:hover {
+  background-color: #09023e;
+}

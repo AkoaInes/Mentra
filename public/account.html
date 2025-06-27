@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>My Account - Mentra</title>
+  <link rel="stylesheet" href="account.css">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <div class="top-bar">
+    <div class="app-name">MENTRA</div>
+    <div class="top-right">
+      <button onclick="window.location.href='main.html'" class="mentor-button">Back to App</button>
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="profile-card">
+  <div class="profile-image" id="profile-pic">
+    <label for="fileInput" class="upload-label">+</label>
+    <input type="file" id="fileInput" accept="image/*" hidden>
+  </div>
+  <div id="account-info" class="profile-info">
+    <p>Loading...</p>
+  </div>
+</div>
+
+  </div>
+
+  <script>
+  window.addEventListener('DOMContentLoaded', () => {
+    const status = localStorage.getItem("status");
+    const accountInfoEndpoint = status === 'mentor' 
+        ? '/api/mentor_account-info' 
+        : '/api/mentee_account-info';
+    
+    fetch(accountInfoEndpoint)
+        .then(res => res.json())
+        .then(data => {
+            const info = document.getElementById('account-info');
+            const profile = document.getElementById('profile-pic');
+            
+            if (data.error) {
+                info.innerHTML = `<p>${data.error}</p>`;
+            } else {
+                // Update profile picture
+                if (data.image) {
+                    profile.style.backgroundImage = `url('${data.image}')`;
+                }
+                
+                // Update account info
+                info.innerHTML = `
+                    <p><strong>Name:</strong> ${data.name}</p>
+                    <p><strong>Surname:</strong> ${data.surname}</p>
+                    ${data.level ? `<p><strong>Level:</strong> ${data.level}</p>` : ''}
+                `;
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching account info:', error);
+            document.getElementById('account-info').innerHTML = 
+                '<p>Failed to load account information</p>';
+        });
+});
+
+    // Handle image upload
+    const fileInput = document.getElementById('fileInput');
+    fileInput.addEventListener('change', () => {
+      const file = fileInput.files[0];
+      if (!file) return;
+
+      const formData = new FormData();
+      formData.append('profileImage', file);
+
+      fetch('/upload-profile-image', {
+        method: 'POST',
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        alert(data.message);
+        location.reload(); // Refresh to show new image
+      });
+    });
+  
+</script>
+
+</body>
+</html>

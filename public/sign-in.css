@@ -1,0 +1,86 @@
+/* Corps de la page */
+body {
+  font-family: Arial, sans-serif;
+  background: linear-gradient(to right, #0a0122ee, #1e0160); /* Fond plus sombre */
+  margin: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+/* Conteneur principal */
+.container {
+  background-color: #15043cc7; /* Fenêtre inchangée */
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  width: 350px;
+  text-align: center;
+  color: #f0f0f0;
+}
+
+.app-logo img {
+  width: 50px;
+  height: 50px;
+  object-fit: contain;
+  border-radius: 6px;
+  
+}
+
+/* Titre */
+.container h2 {
+  margin-bottom: 20px;
+  color: #ffffff;
+}
+
+/* Champs du formulaire */
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+form label {
+  text-align: left;
+  margin: 10px 0 5px;
+  color: #dddddd;
+}
+
+form input {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #555;
+  background-color: #1e024be5;
+  color: #f5f5f5;
+}
+
+/* Bouton */
+form button {
+  margin-top: 20px;
+  padding: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+form button:hover {
+  background-color: #0056b3;
+}
+
+/* Lien de connexion */
+.login-link {
+  margin-top: 15px;
+  font-size: 14px;
+  color: #cccccc;
+}
+
+.login-link a {
+  color: #4d9eff;
+  text-decoration: none;
+}
+
+.login-link a:hover {
+  text-decoration: underline;
+}

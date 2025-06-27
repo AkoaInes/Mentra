@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentra - Peer Mentorship App</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+/>
+
+  <link rel="stylesheet" href="main.css">
+  <script src='https://meet.jit.si/external_api.js' defer></script>
+
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <div class="top-bar">
+    <div class="app-name">MENTRA</div>
+
+    <div class="search-container">
+      <input type="text" class="search-input" placeholder="Search mentors by course...">
+    </div>
+
+    <div class="top-right">
+      <button class="mail-btn" title="Mailbox">
+  <i class="fas fa-envelope"></i>
+</button>
+<div id="mailOverlay" class="mail-overlay">
+  <div class="mail-content">
+    <h3>Mailbox</h3>
+    <div id="mailList"></div>
+    <button onclick="closeMailbox()" class="close-btn">Close</button>
+  </div>
+</div>
+      <div class="help-icon" title="Help">❓</div>
+      <button class="mentor-button" id="beMentorBtn">Be a Mentor?</button>
+    </div>
+  </div>
+
+  <!-- Main frame container -->
+  <div class="container">
+    <!-- Frame 1: Discord-style Sidebar -->
+  <div class="sidebar">
+  <div class="sidebar-top-group">
+  <div class="app-logo">
+    <img src="mentra.jpg" alt="Mentra Logo" />
+  </div>
+
+  <div class="top-icons">
+    <button class="icon-btn" title="Mentors" id="mentorsBtn"><i class="fas fa-users"></i></button>
+    <button class="icon-btn" title="Tracker" id="trackerBtn"><i class="fas fa-chart-line"></i></button>
+    <button class="icon-btn" title="Search"><i class="fas fa-search"></i></button>
+  </div>
+</div>
+
+  <div class="bottom-icons">
+    <button class="icon-btn" title="Settings"><i class="fas fa-cog"></i></button>
+    <button class="icon-btn" title="Account" id="accountBtn"><i class="fas fa-user-circle"></i></button>
+  </div>
+</div>
+
+
+    <!-- Frame 2: My Mentors panel -->
+    <div class="left-panel">
+      <div class="section-title">My Mentors</div>
+
+  <!-- Search bar for discussions (like WhatsApp style) -->
+  <div class="discussion-search">
+    <input type="text" placeholder="Search past discussions...">
+  </div>
+
+<div class="mentor-list" id="mentorList"></div>
+
+
+    </div>
+
+    <div class="center-panel">
+      <div class="start-session-wrapper">
+        <div id="jitsi-container" style="width: 100%; height: 100%; display: none;"></div>
+      </div>
+    </div><!-- Frame 3 -->
+
+    <!-- Frame 4: Session, Notes, Assignment -->
+    <div class="right-panel">
+      <!-- Sub-frame 1: Session History -->
+      <div class="subframe session-history">
+        <div class="section-title">Session History</div>
+      </div>
+
+      <!-- Sub-frame 2: Notes Upload -->
+      <div class="subframe notes-upload">
+        <div class="section-title">Notes</div>
+        <div class="file-list">
+        </div>
+      </div>
+
+      <!-- Sub-frame 3: Assignment Upload -->
+      <div class="subframe assignment-upload">
+        <div class="section-title">Assignment</div>
+        <div class="file-list">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <script>
+let selectedMenteeId = null;
+let sessionId = null;
+let api = null;
+let startTime = null;
+const mentorId = localStorage.getItem("user_id"); // from login
+
+// Load mentees into left panel
+
+async function loadMentors() {
+  try {
+    const menteeId = localStorage.getItem("user_id");
+    const res = await fetch(`/api/my-mentors?mentee_id=${menteeId}`);
+    const mentors = await res.json();
+    const list = document.getElementById("mentorList");
+    list.innerHTML = "";
+
+    if (mentors.length === 0) {
+      list.innerHTML = "<p>No mentors yet. Send a request!</p>";
+      return;
+    }
+
+    mentors.forEach(mentor => {
+      const item = document.createElement("div");
+      item.className = "chat-item";
+
+      const img = document.createElement("img");
+      img.className = "chat-img";
+      img.src = mentor.profile_img ? `/images/${mentor.profile_img}` : "/images/default_profile.jpg";
+      img.alt = mentor.name;
+
+      const info = document.createElement("div");
+      info.className = "chat-info";
+      info.innerHTML = `<div class="chat-name">${mentor.name}</div><div class="chat-sub">${mentor.course}</div>`;
+
+      item.appendChild(img);
+      item.appendChild(info);
+      list.appendChild(item);
+
+      item.addEventListener("click", () => {
+  highlightSelectedMentee(item); // Reuse this for style highlight if needed
+  loadSessionHistory(mentor.id); // Load sessions dynamically
+});
+    });
+  } catch (err) {
+    console.error("Failed to load mentors:", err);
+    document.getElementById("mentorList").innerHTML = "<p>Failed to load mentors.</p>";
+  }
+}
+
+
+function highlightSelectedMentee(el) {
+  document.querySelectorAll('.chat-item').forEach(item =>
+    item.classList.remove('selected')
+  );
+  el.classList.add('selected');
+}
+
+document.querySelector(".start-session-button").addEventListener("click", async () => {
+  if (!selectedMenteeId) {
+    alert("Select a mentee first.");
+    return;
+  }
+
+  const roomName = mentra-session-`${mentorId}-${selectedMenteeId}`;
+  const container = document.getElementById("jitsi-container");
+  container.style.display = "block";
+  document.querySelector(".start-session-button").style.display = "none";
+
+  const domain = "meet.jit.si";
+  const options = {
+    roomName: roomName,
+    width: "100%",
+    height: "100%",
+    parentNode: container
+  };
+  api = new JitsiMeetExternalAPI(domain, options);
+
+  startTime = new Date();
+  const res = await fetch('/api/sessions/start', {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      mentor_id: mentorId,
+      mentee_id: selectedMenteeId,
+      start_time: startTime.toISOString()
+    })
+  });
+
+  const data = await res.json();
+  sessionId = data.session_id;
+});
+
+async function endSession() {
+  if (!sessionId) return;
+  const endTime = new Date();
+  const duration = Math.round((endTime - new Date(startTime)) / 60000);
+
+  await fetch('/api/sessions/end', {
+    method: "POST",
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      session_id: sessionId,
+      end_time: endTime.toISOString(),
+      duration
+    })
+  });
+
+  if (api) api.dispose();
+  alert("Session ended and saved.");
+}
+
+window.addEventListener('DOMContentLoaded', loadMentors);
+</script>
+
+<script>
+async function loadSessionHistory(mentorId) {
+  const res = await fetch(`/api/sessions/${mentorId}`);
+  const sessions = await res.json();
+
+  const container = document.querySelector('.session-history');
+  container.innerHTML = `<div class="section-title">Session History</div>`;
+
+  if (sessions.length === 0) {
+    container.innerHTML += "<div class='session-item'>No sessions yet.</div>";
+    return;
+  }
+
+  sessions.forEach(session => {
+    const date = new Date(session.date).toLocaleDateString();
+    const topic = session.topic || "Untitled";
+    container.innerHTML += `<div class="session-item">${date} - ${topic} (${session.duration} mins)</div>`;
+  });
+}
+
+async function loadSessionHistory(mentorId) {
+  const res = await fetch(`/api/sessions/${mentorId}`);
+  const sessions = await res.json();
+
+  const container = document.querySelector(".session-history");
+  container.innerHTML = '<div class="section-title">Session History</div>';
+
+  sessions.forEach(session => {
+    const item = document.createElement("div");
+    item.className = "session-item";
+    item.innerHTML = `
+      ${session.date} - ${session.topic || 'No topic'} (${session.duration} mins)<br>
+      ${session.notes_path ? `<a href="/uploads/${session.notes_path}" download>Download Notes</a><br>` : ''}
+      ${session.assignments_path ? `<a href="/uploads/${session.assignments_path}" download>Download Assignment</a>` : ''}
+    `;
+    container.appendChild(item);
+  });
+}
+</script>
+
+<script>
+  document.getElementById('accountBtn').addEventListener('click', () => {
+    window.location.href = '/account.html';
+  });
+
+  document.getElementById('trackerBtn').addEventListener('click', () => {
+    window.location.href = '/tracker.html';
+  });
+
+  document.getElementById('mentorsBtn').addEventListener('click', () => {
+    window.location.href = '/mentors.html';
+  });
+
+  document.getElementById('beMentorBtn').addEventListener('click', () => {
+    window.location.href = '/Become_a_mentor.html';
+  });
+</script>
+
+<script>
+const userId = localStorage.getItem("user_id");
+const userStatus = localStorage.getItem("status");
+
+document.querySelector(".mail-btn").addEventListener("click", () => {
+  document.getElementById("mailOverlay").classList.add("active");
+  loadMailbox();
+});
+
+function closeMailbox() {
+  document.getElementById("mailOverlay").classList.remove("active");
+}
+
+async function loadMailbox() {
+  const endpoint = userStatus === 'mentor'
+    ? `/api/requests/inbox?mentor_id=${userId}`: `/api/requests/outbox?mentee_id=${userId}`;
+
+  const res = await fetch(endpoint);
+  const requests = await res.json();
+  const container = document.getElementById("mailList");
+
+  container.innerHTML = "";
+  if (requests.length === 0) {
+    container.innerHTML = "<p>No messages.</p>";
+    return;
+  }
+
+  requests.forEach(req => {
+  const message = userStatus === 'mentor'
+    ? `Request from ${req.mentee_name} ${req.mentee_surname}`
+    : `To ${req.mentor_name} ${req.mentor_surname}: ${req.status.toUpperCase()}`;
+
+  container.innerHTML += `
+    <div class="mail-item">
+      ${message}
+      <br><small>${new Date(req.requested_at).toLocaleString()}</small>
+    </div>
+  `;
+});
+}
+</script>
+
+</body>
+</html>

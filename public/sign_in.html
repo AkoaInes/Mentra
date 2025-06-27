@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Register</title>
+  <link rel="stylesheet" type="text/css" href="sign-in.css">
+
+</head>
+<body>
+
+  <div class="container">
+    <div class="app-logo">
+      <img src="mentra.jpg" alt="Mentra Logo" />
+    </div>
+
+    <h2>Registration</h2>
+    
+    <form id="registerForm">
+      <label for="Name">Name :</label>
+      <input type="text" id="name" name="Name" required>
+
+      <label for="Surname">Surname :</label>
+      <input type="text" id="surname" name="Surname" required>
+
+      <label for="email">Email :</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="password">Password :</label>
+      <input type="password" id="password" name="password" required>
+
+      <label for="confirm_password">Confirm password :</label>
+      <input type="password" id="confirm_password" name="confirm_password" required>
+
+      <button type="submit">Register</button>
+    </form>
+
+    <div class="login-link">
+      <p>Already have an account ? <a href="/login.html">Sign in</a></p>
+    </div>
+  </div>
+  <script src="sign-in.js"></script>
+</body>
+</html>

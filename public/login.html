@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'">
+  <link rel="stylesheet" type="text/css" href="login.css">
+  <script src="login.js" defer></script>
+  <title>Login Page</title>
+</head>
+<body>
+  <div class="container">
+    
+
+    <h1>Login</h1>
+
+    <form id="loginForm">
+      <div class="app-logo">
+      <img src="mentra.jpg" alt="Mentra Logo" />
+    </div>
+      <label for="name">Name:</label>
+      <input type="text" id="name" name="surname" required>
+
+      <label for="name">Surname:</label>
+      <input type="text" id="name" name="surname" required>
+
+      <label for="password">Password:</label>
+      <div class="password-container">
+        <input type="password" id="password" name="password" required>
+      </div>
+
+      <label for="status">Status:</label>
+      <select id="status" name="status" required>
+        <option value="mentee">Mentee</option>
+        <option value="mentor">Mentor</option>
+      </select>
+
+      <button type="submit" class="login-button">Log In</button>
+    </form>
+
+    <p>Don't have an account? <a href="/sign_in.html">Register here</a></p>
+  </div>
+</body>
+</html>
