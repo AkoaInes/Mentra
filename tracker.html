@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mentra - Peer Mentorship App</title>
+  <link
+  rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link rel="stylesheet" href="tracker.css">
+
+</head>
+<body>
+  <!-- Top navigation bar -->
+  <div class="top-bar">
+    <div class="app-name">MENTRA</div>
+    
+    <div class="page-name">Mentors Insights</div>
+    <div class="top-right">
+      <div class="help-icon" title="Help">Help</div>
+      <button onclick="goHome()" class="homeBtn">Back to App</button>
+    </div>
+  </div>
+
+  <!-- Main frame container -->
+  <div class="container">
+    <!-- Frame 1: Discord-style Sidebar -->
+  <div class="sidebar">
+  <div class="sidebar-top-group">
+  <div class="app-logo">
+    <img src="mentra.jpg" alt="Mentra Logo" />
+  </div>
+</div>
+
+  <div class="bottom-icons">
+    <button class="icon-btn" title="Settings"><i class="fas fa-cog"></i></button>
+  </div>
+</div>
+
+    <!-- Frame 2: My Mentors panel -->
+    <div class="left-panel">
+      <div class="section-title">Mentors</div>
+
+  <!-- Search bar for mentors -->
+  <div class="mentor-search">
+    <input type="text" id="searchInput" placeholder="Search mentor">
+  </div>
+
+ <!-- mentor list -->
+<div class="mentor-list" id="mentorList"></div>
+
+    </div>
+
+    <div class="center-panel">
+      
+      <div class="fiter-options">
+        <button class="filter">Last 24-Hours</button>
+        <button class="filter">Last 7-days</button>
+        <button class="filter">Last Month</button>
+        <button class="filter">Last 3-Months</button>
+        <button class="filter">Last Year</button>
+      </div>
+
+      <div class="chart">
+        <canvas id="timeChart"></canvas>
+
+        <div class="updates"></div>
+      </div>
+
+    </div><!-- Frame 3 -->
+
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+
+  const userId = localStorage.getItem("user_id");
+const userStatus = localStorage.getItem("status"); // 'mentor' or 'mentee'
+let linkedUsers = []; // holds full list
+let activeLinkedId = null;
+let currentRange = "";
+
+function goHome() {
+  const status = localStorage.getItem("status");
+  if (status === "mentor") {
+    window.location.href = "main.html";
+  } else {
+    window.location.href = "main_mentee.html";
+  }
+}
+
+// Load mentors or mentees based on status
+async function loadLinkedUsers() {
+  const res = await fetch(`/api/linked-users?user_id=${userId}&status=${userStatus}`);
+  linkedUsers = await res.json();
+  displayUserList(linkedUsers);
+}
+
+// Render user list in left panel
+function displayUserList(users) {
+  const container = document.getElementById('mentorList');
+  container.innerHTML = '';
+
+  users.forEach(user => {
+    const item = document.createElement('div');
+    item.className = 'mentor-item';
+    item.dataset.userId = user.id;
+    item.innerHTML = `<img src="/${user.profile_img || 'default_profile.jpg'}" class="user-avatar" />
+  <span class="user-name">${user.name} ${user.surname}</span>`;
+
+    item.addEventListener('click', () => {
+      activeLinkedId = user.id;
+      fetchSessions(currentRange);
+      highlightSelected(item);
+    });
+
+    container.appendChild(item);
+  });
+}
+
+// Highlight selected mentor/mentee
+function highlightSelected(selectedItem) {
+  document.querySelectorAll('.mentor-item').forEach(item =>
+    item.classList.remove('selected')
+  );
+  selectedItem.classList.add('selected');
+}
+
+// Filter user list on input
+document.getElementById('searchInput').addEventListener('input', e => {
+  const keyword = e.target.value.toLowerCase();
+  const filtered = linkedUsers.filter(user => `${user.name} ${user.surname}`.toLowerCase().includes(keyword)
+  );
+  displayUserList(filtered);
+});
+
+// Initial load
+loadLinkedUsers();
+
+
+async function fetchSessions(range = '') {
+  if (!activeLinkedId) return;
+
+  const queryParams = new URLSearchParams({
+    mentor_id: userStatus === 'mentee' ? activeLinkedId : userId,
+    mentee_id: userStatus === 'mentee' ? userId : activeLinkedId,
+    range: range
+  });
+
+  const url = `/api/sessions/history?${queryParams.toString()}`;
+  const res = await fetch(url);
+  const data = await res.json();
+
+  const labels = data.map(row => row.session_date);
+  const durations = data.map(row => row.duration);
+
+  const ctx = document.getElementById('timeChart').getContext('2d');
+
+  if (window.chart) window.chart.destroy(); // prevent overlap
+  window.chart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels,
+      datasets: [{
+        label: 'Session Duration (min)',
+        data: durations,
+        borderColor: '#290583',
+        borderWidth: 2,
+        fill: false,
+      }]
+    },
+    options: {
+      responsive: true,
+      scales: {
+        x: {
+          ticks: { color: '#fff' }
+        },
+        y: {
+          beginAtZero: true,
+          ticks: { color: '#fff' }
+        }
+      }
+    }
+  });
+}
+
+document.querySelectorAll('.filter').forEach(button => {
+  button.addEventListener('click', () => {
+    const label = button.textContent.trim().toLowerCase();
+    const rangeMap = {
+      'last 24-hours': '24h',
+      'last 7-days': '7d',
+      'last month': '1m',
+      'last 3-months': '3m',
+      'last year': '1y',
+    };
+    fetchSessions(rangeMap[label] || '');
+  });
+});
+
+fetchSessions(); // Load initial chart
+
+</script>
+  
+</body>
+</html>
